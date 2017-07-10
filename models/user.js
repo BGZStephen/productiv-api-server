@@ -62,9 +62,9 @@ module.exports.getAll = function() {
   })
 }
 
-module.exports.getOne = function(userId) {
+module.exports.getOne = function(userObject) {
   return new Promise((resolve, reject) => {
-    User.findOne({_id: userId}).then(user => {
+    User.findOne(userObject).then(user => {
       if(user != null) {
         resolve(user)
       } else {
