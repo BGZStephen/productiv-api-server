@@ -86,3 +86,14 @@ module.exports.update = function(userObject) {
     })
   })
 }
+
+module.exports.updatePassword = function(userObject) {
+  return new Promise((resolve, reject) => {
+    User.findOne({_id: userObject._id}).then(user => {
+      user.password = bcrypt.hashSync(userObject.password, 8)
+      user.markModified('password')
+      console.log(user)
+      user.save(resolve, reject)
+    })
+  })
+}

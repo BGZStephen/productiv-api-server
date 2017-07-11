@@ -125,7 +125,7 @@ router.put("/:userId", (req, res, next) => {
   let decoded = jwt.verify(token, Config.jwtSecret)
   let userId = decoded.data._id
 
-  if(req.get('Authorization') != Config.adminAuthToken || userId != req.params.userId) {
+  if(req.get('Authorization') != Config.siteAuthToken || userId != req.params.userId) {
     return res.status(401).json({error: "Unauthorized access, access denied"})
   }
 
@@ -139,8 +139,8 @@ router.put("/:userId", (req, res, next) => {
     }
 
     User.update(userObject)
-    .then(users => {
-      res.json(users)
+    .then(user => {
+      res.sendStatus(200)
     })
     .catch(error => {
       res.status(500).json({error: error})
@@ -154,7 +154,7 @@ router.put("/:userId", (req, res, next) => {
 
     User.updatePassword(userObject)
     .then(users => {
-      res.json(users)
+      res.sendStatus(200)
     })
     .catch(error => {
       res.status(500).json({error: error})
