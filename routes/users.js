@@ -115,3 +115,49 @@ router.get("", (req, res, next) => {
     })
   }
 })
+
+router.put("/:userId", (req, res, next) => {
+  if(!req.get('Authorization')) {
+    return res.status(401).json({error: "Authorisation token not supplied"})
+  }
+
+  let token = req.get('Token')
+  let decoded = jwt.verify(token, Config.jwtSecret)
+  let userId = decoded.data._id
+
+  if(req.get('Authorization') != Config.adminAuthToken || userId != req.params.userId) {
+    return res.status(401).json({error: "Unauthorized access, access denied"})
+  }
+
+  if(req.body.type == "profile") {
+
+    let userObject = {
+      _id: userId,
+      email: req.body.email,
+      first_name: req.body.first_name,
+      last_name: req.body.last_name,
+    }
+
+    User.update(userObject)
+    .then(users => {
+      res.json(users)
+    })
+    .catch(error => {
+      res.status(500).json({error: error})
+    })
+  } else if (req.body.type == "password") {
+
+    let userObject = {
+      _id: userId,
+      password: req.body.password,
+    }
+
+    User.updatePassword(userObject)
+    .then(users => {
+      res.json(users)
+    })
+    .catch(error => {
+      res.status(500).json({error: error})
+    })
+  }
+})
