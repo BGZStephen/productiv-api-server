@@ -12,7 +12,7 @@ router.post("", (req, res, next) => {
   if(!req.query.siteAuthToken) {
     return res.status(401).json({error: "Authorisation token not supplied"})
   } else if(req.query.siteAuthToken != Config.siteAuthToken) {
-    return res.status(403).json({error: "Unauthorized access, access denied"})
+    return res.status(401).json({error: "Unauthorized access, access denied"})
   } else {
     let userObject = new User({
       email: req.body.email,
@@ -33,17 +33,18 @@ router.post("", (req, res, next) => {
 
 router.post("/authenticate", (req, res, next) => {
 
-  if(!req.query.siteAuthToken) {
+  if(!req.get('Authorization')) {
     return res.status(401).json({error: "Authorisation token not supplied"})
-  } else if(req.query.siteAuthToken != Config.siteAuthToken) {
-    return res.status(403).json({error: "Unauthorized access, access denied"})
+  } else if(req.get('Authorization') != Config.siteAuthToken) {
+    return res.status(401).json({error: "Unauthorized access, access denied"})
   } else {
     let email = req.body.email
     let queryPassword = req.body.password
 
     User.getOne({email: email})
     .then(user => {
-      bcrypt.compare(queryPassword, user.password).then((authResult) => {
+      bcrypt.compare(queryPassword, user.password)
+      .then((authResult) => {
         if(authResult) {
           let token = jwt.sign({
             exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 365),
@@ -59,10 +60,42 @@ router.post("/authenticate", (req, res, next) => {
         } else {
           res.sendStatus(401)
         }
-      });
+      })
+    })
+    .catch(error => {
+      res.status(500).json({error: error})
+    })
+  }
+})
+
+router.get("/:userId", (req, res, next) => {
+
+  if(!req.get('Authorization')) {
+    return res.status(401).json({error: "Authorisation token not supplied"})
+  } else if(req.get('Authorization') != Config.siteAuthToken) {
+    return res.status(401).json({error: "Unauthorized access, access denied"})
+  } else {
+
+    let token = req.get('Token')
+    let decoded = jwt.verify(token, Config.jwtSecret)
+    let userId = decoded.data._id
+
+    // check to ensure user is only able to access their own user profile, even if other id is entered as query param
+    if(userId != req.params.userId) {
+      return res.status(403).json({error: "Unauthorized access, access denied"})
+    } else {
+      User.getOne({_id: userId})
+      .then(user => {
+        res.json({
+          _id: user._id,
+          email: user.email,
+          first_name: user.first_name,
+          last_name: user.last_name,
+        })
+      })
+      .catch(error => {
+        res.status(500).json({error: error})
+      })
     }
-  })
-  .catch(error => {
-    res.status(500).json({error: error})
-  })
+  }
 })
