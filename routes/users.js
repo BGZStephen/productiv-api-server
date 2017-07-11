@@ -99,3 +99,19 @@ router.get("/:userId", (req, res, next) => {
     }
   }
 })
+
+router.get("", (req, res, next) => {
+  if(!req.get('Authorization')) {
+    return res.status(401).json({error: "Authorisation token not supplied"})
+  } else if(req.get('Authorization') != Config.adminAuthToken) {
+    return res.status(401).json({error: "Unauthorized access, access denied"})
+  } else {
+    User.getAll()
+    .then(users => {
+      res.json(users)
+    })
+    .catch(error => {
+      res.status(500).json({error: error})
+    })
+  }
+})

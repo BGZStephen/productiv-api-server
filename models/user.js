@@ -52,8 +52,9 @@ module.exports.delete = function(userId) {
 
 module.exports.getAll = function() {
   return new Promise((resolve, reject) => {
-    User.find({}).delete().then(users => {
+    User.find({}).then(users => {
       if(users.length != 0) {
+        console.log(users)
         resolve(users)
       } else {
         reject("Unable to retrieve users")
