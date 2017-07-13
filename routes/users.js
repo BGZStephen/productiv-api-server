@@ -73,6 +73,7 @@ router.get("/:userId", (req, res, next) => {
 
 router.post("", (req, res, next) => {
 
+
   if(!req.query.siteAuthToken) {
     return res.status(401).json({error: "Authorisation token not supplied"})
   } else if(req.query.siteAuthToken != Config.siteAuthToken) {
@@ -80,13 +81,14 @@ router.post("", (req, res, next) => {
   } else {
     let userObject = new User({
       email: req.body.email,
-      first_name: req.body.first_name,
-      last_name: req.body.last_name,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
       password: req.body.password
     })
 
     User.create(userObject)
     .then(user => {
+      console.log(user)
       res.sendStatus(200)
     })
     .catch(error => {
