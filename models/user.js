@@ -9,11 +9,11 @@ const UserSchema = mongoose.Schema({
     required: true,
     type: String,
   },
-  first_name: {
+  firstName: {
     type: String,
     required: true,
   },
-  last_name: {
+  lastName: {
     type: String,
     required: true,
   },
@@ -24,8 +24,8 @@ const UserSchema = mongoose.Schema({
 const User = module.exports = mongoose.model('User', UserSchema)
 
 module.exports.create = function(userObject) {
-
   // has password before storing in database
+  console.log(userObject)
   userObject.password = bcrypt.hashSync(userObject.password, 8)
   return new Promise((resolve, reject) => {
     userObject.save().then(user => {
