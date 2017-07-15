@@ -88,8 +88,18 @@ router.post("", (req, res, next) => {
 
     User.create(userObject)
     .then(user => {
-      console.log(user)
-      res.sendStatus(200)
+
+      let token = jwt.sign({
+        exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 365),
+        data: {_id: user._id}
+      }, Config.jwtSecret);
+
+      let response = {
+        token: token,
+        last_authenticated: new Date().getTime()
+      }
+
+      res.json(response)
     })
     .catch(error => {
       res.status(500).json({error: error})

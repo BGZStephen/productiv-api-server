@@ -5,7 +5,8 @@
     "cors": "^2.8.3",
     "express": "^4.15.3",
     "jsonwebtoken": "^7.4.1",
-    "mongoose": "^4.11.1"
+    "mongoose": "^4.11.1",
+    "nodemon": "^1.11.0"
   },
   "devDependencies": {
     "lint": "^1.1.2"
