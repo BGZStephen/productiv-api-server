@@ -24,15 +24,21 @@ const UserSchema = mongoose.Schema({
 const User = module.exports = mongoose.model('User', UserSchema)
 
 module.exports.create = function(userObject) {
-  // has password before storing in database
-  console.log(userObject)
-  userObject.password = bcrypt.hashSync(userObject.password, 8)
   return new Promise((resolve, reject) => {
-    userObject.save().then(user => {
+    User.findOne({email: userObject.email})
+    .then(user => {
       if(user != null) {
-        resolve(user)
+        reject("Email address already in use")
       } else {
-        reject("User creation failed")
+        // hash password before storing in database
+        userObject.password = bcrypt.hashSync(userObject.password, 8)
+        userObject.save().then(user => {
+          if(user != null) {
+            resolve(user)
+          } else {
+            reject("User creation failed")
+          }
+        })
       }
     })
   })

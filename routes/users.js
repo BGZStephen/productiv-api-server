@@ -18,7 +18,7 @@ router.delete("/:userId", (req, res, next) => {
       res.sendStatus(200)
     })
     .catch(error => {
-      res.status(500).json({error: error})
+      res.status(500).send(error)
     })
   }
 })
@@ -34,7 +34,7 @@ router.get("", (req, res, next) => {
       res.json(users)
     })
     .catch(error => {
-      res.status(500).json({error: error})
+      res.status(500).send(error)
     })
   }
 })
@@ -65,7 +65,7 @@ router.get("/:userId", (req, res, next) => {
         })
       })
       .catch(error => {
-        res.status(500).json({error: error})
+        res.status(500).send(error)
       })
     }
   }
@@ -99,10 +99,10 @@ router.post("", (req, res, next) => {
         last_authenticated: new Date().getTime()
       }
 
-      res.json(response)
+      res.status(200).json(response)
     })
     .catch(error => {
-      res.status(500).json({error: error})
+      res.status(500).send(error)
     })
   }
 })
@@ -139,7 +139,7 @@ router.post("/authenticate", (req, res, next) => {
       })
     })
     .catch(error => {
-      res.status(500).json({error: error})
+      res.status(500).send(error)
     })
   }
 })
@@ -185,7 +185,7 @@ router.put("/:userId", (req, res, next) => {
       res.sendStatus(200)
     })
     .catch(error => {
-      res.status(500).json({error: error})
+      res.status(500).send(error)
     })
   }
 })
