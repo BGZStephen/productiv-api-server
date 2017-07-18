@@ -8,9 +8,9 @@ const User = require('../models/user')
 module.exports = router
 
 router.delete("/:userId", (req, res, next) => {
-  if(!req.query.siteAuthToken) {
+  if(!req.get('Authorization')) {
     return res.status(401).json({error: "Authorisation token not supplied"})
-  } else if(req.query.siteAuthToken != Config.adminAuthToken) {
+  } else if(req.get('Authorization') != Config.siteAuthToken && req.get('Authorization') != Config.adminAuthToken) {
     return res.status(401).json({error: "Unauthorized access, access denied"})
   } else {
     User.delete(req.params.userId)
@@ -24,9 +24,9 @@ router.delete("/:userId", (req, res, next) => {
 })
 
 router.get("", (req, res, next) => {
-  if(!req.query.adminAuthToken) {
+  if(!req.get('Authorization')) {
     return res.status(401).json({error: "Authorisation token not supplied"})
-  } else if(req.query.adminAuthToken != Config.adminAuthToken) {
+  } else if(req.get('Authorization') != Config.siteAuthToken && req.get('Authorization') != Config.adminAuthToken) {
     return res.status(401).json({error: "Unauthorized access, access denied"})
   } else {
     User.getAll()
@@ -41,9 +41,9 @@ router.get("", (req, res, next) => {
 
 router.get("/:userId", (req, res, next) => {
 
-  if(!req.query.siteAuthToken) {
+  if(!req.get('Authorization')) {
     return res.status(401).json({error: "Authorisation token not supplied"})
-  } else if(req.query.siteAuthToken != Config.siteAuthToken) {
+  } else if(req.get('Authorization') != Config.siteAuthToken && req.get('Authorization') != Config.adminAuthToken) {
     return res.status(401).json({error: "Unauthorized access, access denied"})
   } else {
 
@@ -74,9 +74,9 @@ router.get("/:userId", (req, res, next) => {
 router.post("", (req, res, next) => {
 
 
-  if(!req.query.siteAuthToken) {
+  if(!req.get('Authorization')) {
     return res.status(401).json({error: "Authorisation token not supplied"})
-  } else if(req.query.siteAuthToken != Config.siteAuthToken) {
+  } else if(req.get('Authorization') != Config.siteAuthToken && req.get('Authorization') != Config.adminAuthToken) {
     return res.status(401).json({error: "Unauthorized access, access denied"})
   } else {
     let userObject = new User({
@@ -109,9 +109,11 @@ router.post("", (req, res, next) => {
 
 router.post("/authenticate", (req, res, next) => {
 
-  if(!req.query.siteAuthToken) {
+  console.log(req.get('Authorization'))
+
+  if(!req.get('Authorization')) {
     return res.status(401).json({error: "Authorisation token not supplied"})
-  } else if(req.query.siteAuthToken != Config.siteAuthToken) {
+  } else if(req.get('Authorization') != Config.siteAuthToken && req.get('Authorization') != Config.adminAuthToken) {
     return res.status(401).json({error: "Unauthorized access, access denied"})
   } else {
     let email = req.body.email
@@ -145,7 +147,7 @@ router.post("/authenticate", (req, res, next) => {
 })
 
 router.put("/:userId", (req, res, next) => {
-  if(!req.query.siteAuthToken) {
+  if(!req.get('Authorization')) {
     return res.status(401).json({error: "Authorisation token not supplied"})
   }
 
@@ -153,7 +155,7 @@ router.put("/:userId", (req, res, next) => {
   let decoded = jwt.verify(token, Config.jwtSecret)
   let userId = decoded.data._id
 
-  if(req.query.siteAuthToken != Config.siteAuthToken || userId != req.params.userId) {
+  if((req.get('Authorization') != Config.siteAuthToken && req.get('Authorization') != Config.adminAuthToken) || userId != req.params.userId) {
     return res.status(401).json({error: "Unauthorized access, access denied"})
   }
 
