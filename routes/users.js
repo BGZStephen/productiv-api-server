@@ -109,41 +109,50 @@ router.post("", (req, res, next) => {
 
 router.post("/authenticate", (req, res, next) => {
 
-  console.log(req.get('Authorization'))
-
   if(!req.get('Authorization')) {
     return res.status(401).json({error: "Authorisation token not supplied"})
-  } else if(req.get('Authorization') != Config.siteAuthToken && req.get('Authorization') != Config.adminAuthToken) {
+  }
+
+  if(req.get('Authorization') != Config.siteAuthToken && req.get('Authorization') != Config.adminAuthToken) {
     return res.status(401).json({error: "Unauthorized access, access denied"})
-  } else {
-    let email = req.body.email
-    let queryPassword = req.body.password
+  }
 
-    User.getOne({email: email})
-    .then(user => {
-      bcrypt.compare(queryPassword, user.password)
-      .then((authResult) => {
-        if(authResult) {
-          let token = jwt.sign({
-            exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 365),
-            data: {_id: user._id}
-          }, Config.jwtSecret);
+  let adminCheck;
 
-          let response = {
-            token: token,
-            last_authenticated: new Date().getTime()
-          }
+  if(req.get('Authorization') == Config.adminAuthToken) {
+    adminCheck = true;
+  }
 
-          res.json(response)
-        } else {
-          res.sendStatus(401)
+  let email = req.body.email
+  let queryPassword = req.body.password
+
+  User.getOne({email: email})
+  .then(user => {
+    if(adminCheck && user.role != 'admin') {
+      return res.sendStatus(401)
+    }
+    bcrypt.compare(queryPassword, user.password)
+    .then((authResult) => {
+      if(authResult) {
+        let token = jwt.sign({
+          exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 365),
+          data: {_id: user._id}
+        }, Config.jwtSecret);
+
+        let response = {
+          token: token,
+          last_authenticated: new Date().getTime()
         }
-      })
+
+        res.json(response)
+      } else {
+        res.sendStatus(401)
+      }
     })
     .catch(error => {
       res.status(500).send(error)
     })
-  }
+  })
 })
 
 router.put("/:userId", (req, res, next) => {
