@@ -20,14 +20,11 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // routing
-
-// make routes accessible
-const users = require('./routes/users');
-
-app.use('/users', users);
+app.use(require('./routes/public'));
+app.use(require('./routes/private'));
 
 const port = 3000;
 
 app.listen(port, () => {
-	
+
 });

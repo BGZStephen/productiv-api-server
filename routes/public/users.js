@@ -1,13 +1,10 @@
-const Config = require('../config');
+const Config = require('../../config');
 const bcrypt = require('bcryptjs');
-const router = require('express').Router();
 const jwt = require('jsonwebtoken');
-const User = require('../models/user');
-const Auth = require('../helpers/auth')
+const User = require('../../models/user');
+const Auth = require('../../helpers/auth')
 
-module.exports = router;
-
-router.delete('/:userId', (req, res) => {
+module.exports.deleteUser = function(req, res) {
 	const authorized = Auth.routeAuth(req.get('Authorization'));
 	if(!authorized) {
 		return res.status(401).json({error: 'Unauthorized access, access denied'});
@@ -20,32 +17,9 @@ router.delete('/:userId', (req, res) => {
 	.catch(error => {
 		res.status(500).send(error);
 	});
-});
+};
 
-router.get('', (req, res) => {
-	const authorized = Auth.routeAuth(req.get('Authorization'));
-	if(!authorized) {
-		return res.status(401).json({error: 'Unauthorized access, access denied'});
-	}
-
-	const decodedJwt = jwt.verify(req.get('Token'), Config.jwtSecret);
-	const role = decodedJwt.data.role;
-
-	if(role != 'admin') {
-		return res.status(401).json({error: 'Unauthorized access, access denied'});
-	}
-
-	User.getAll()
-	.then(users => {
-		res.json(users);
-	})
-	.catch(error => {
-		res.status(500).send(error);
-	});
-});
-
-router.get('/:userId', (req, res) => {
-
+module.exports.getUser = function(req, res) {
 	if(!req.get('Authorization')) {
 		return res.status(401).json({error: 'Authorisation token not supplied'});
 	} else if(req.get('Authorization') != Config.siteAuthToken && req.get('Authorization') != Config.adminAuthToken) {
@@ -74,9 +48,9 @@ router.get('/:userId', (req, res) => {
 			});
 		}
 	}
-});
+};
 
-router.post('', (req, res) => {
+module.exports.create = function(req, res) {
 	const authorized = Auth.routeAuth(req.get('Authorization'));
 	if(!authorized) {
 		return res.status(401).json({error: 'Unauthorized access, access denied'});
@@ -107,10 +81,9 @@ router.post('', (req, res) => {
 	.catch(error => {
 		res.status(500).send(error);
 	});
-});
+};
 
-router.post('/authenticate', (req, res) => {
-
+module.exports.authenticate = function(req, res) {
 	const authorized = Auth.routeAuth(req.get('Authorization'));
 	if(!authorized) {
 		return res.status(401).json({error: 'Unauthorized access, access denied'});
@@ -149,9 +122,9 @@ router.post('/authenticate', (req, res) => {
 					res.status(500).send(error);
 				});
 		});
-});
+};
 
-router.put('/:userId', (req, res) => {
+module.exports.update = function(req, res) {
 	const authorized = Auth.routeAuth(req.get('Authorization'));
 	if(!authorized) {
 		return res.status(401).json({error: 'Unauthorized access, access denied'});
@@ -188,4 +161,4 @@ router.put('/:userId', (req, res) => {
 			res.status(500).send(error);
 		});
 	}
-});
+};
