@@ -5,6 +5,20 @@ const jwt = require('jsonwebtoken');
 const User = require('../../models/user');
 const Auth = require('../../helpers/auth')
 
+module.exports.loadUser = function(req, res, next) {
+	const userId = req.params.userId || req.body.id
+
+	User.findById(userId)
+	.then(user => {
+		if(user == null) {
+			return res.status(500).send('User not found')
+		} else {
+			req.user = user
+			next()
+		}
+	})
+};
+
 module.exports.deleteUser = function(req, res) {
 	const authorized = Auth.checkToken(req.get('Authorization'));
 	if(!authorized.success) {
@@ -35,20 +49,10 @@ module.exports.getUser = function(req, res) {
 		return res.status(403).send('Unauthorized access, access denied');
 	}
 
-	User.findById(userId)
-	.then(user => {
-		if(user == null) {
-			return res.status(500).send('User not found');
-		} else {
-			res.json(user);
-		}
-	})
-	.catch(error => {
-		res.status(500).send(error);
-	});
+	return res.json(req.user);
 };
 
-module.exports.create = function(req, res) {
+module.exports.createUser = function(req, res) {
 	const authorized = Auth.checkToken(req.get('Authorization'));
 	if(!authorized.success) {
 		return res.status(401).json(authorized.message);
@@ -124,7 +128,7 @@ module.exports.authenticate = function(req, res) {
 	});
 };
 
-module.exports.update = function(req, res) {
+module.exports.updateUser = function(req, res) {
 	const authorized = Auth.checkToken(req.get('Authorization'));
 	if(!authorized.success) {
 		return res.status(401).json(authorized.message);
@@ -148,15 +152,8 @@ module.exports.update = function(req, res) {
       res.status(500).send(error);
     });
 	} else if (req.body.type == 'password') {
-
-		User.findById(userId)
-		.then(user => {
-			user.password = bcrypt.hashSync(req.body.password, 8);
-			user.markModified('password');
-			user.save(res.sendStatus(200));
-		})
-		.catch(error => {
-      res.status(500).send(error);
-    });
+		req.user.password = bcrypt.hashSync(req.body.password, 8);
+		req.user.markModified('password');
+		req.user.save(res.sendStatus(200));
 	}
 };

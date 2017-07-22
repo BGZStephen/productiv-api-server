@@ -1,12 +1,13 @@
 const router = require('express').Router();
-const Users = require('./users');
+const users = require('./users');
 
 // Users
-router.post('/users', Users.create);
-router.delete('/users/:userId', Users.deleteUser);
-router.get('/users/:userId', Users.getUser);
-router.put('/users/:userId', Users.update);
-router.post('/users/authenticate', Users.authenticate);
+router.post('/users', users.createUser);
+router.all('/users/:userId*', users.loadUser)
+router.delete('/users/:userId', users.deleteUser);
+router.get('/users/:userId', users.getUser);
+router.put('/users/:userId', users.updateUser);
+router.post('/users/authenticate', users.authenticate);
 
 // Business
 
