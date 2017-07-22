@@ -1,7 +1,6 @@
 const Config = require('../../config');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-// const mongoose = require('mongoose');
 const User = require('../../models/user');
 const Auth = require('../../helpers/auth')
 
@@ -40,9 +39,8 @@ module.exports.getUser = function(req, res) {
 		return res.status(401).json(authorized.message);
 	}
 
-	let token = req.get('Token');
-	let decoded = jwt.verify(token, Config.jwtSecret);
-	let userId = decoded.data._id;
+	let decodedJwt = jwt.verify(req.get('Token'), Config.jwtSecret);
+	let userId = decodedJwt.data._id;
 
 	// check to ensure user is only able to access their own user profile, even if other id is entered as query param
 	if(userId != req.params.userId) {
@@ -134,9 +132,8 @@ module.exports.updateUser = function(req, res) {
 		return res.status(401).json(authorized.message);
 	}
 
-	let token = req.get('Token');
-	let decoded = jwt.verify(token, Config.jwtSecret);
-	let userId = decoded.data._id;
+	let decodedJwt = jwt.verify(req.get('Token'), Config.jwtSecret);
+	let userId = decodedJwt.data._id;
 
 	if(req.body.type == 'profile') {
 

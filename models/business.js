@@ -7,9 +7,8 @@ const BusinessSchema = mongoose.Schema({
   businessUsers: [{
     userId: String,
     burinssRole: String,
-  }]
+  }],
 	created_on: Date,
-  emailFormats: [String]
   website: String,
 });
 
