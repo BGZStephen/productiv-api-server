@@ -1,10 +1,11 @@
 const router = require('express').Router();
 const Users = require('./users');
 
+module.exports = router;
+
+// Users
+router.post('/users', Users.create);
 router.delete('/users/:userId', Users.deleteUser);
 router.get('/users/:userId', Users.getUser);
-router.post('/users', Users.create);
-router.post('/users/authenticate', Users.authenticate);
 router.put('/users/:userId', Users.update);
-
-module.exports = router;
+router.post('/users/authenticate', Users.authenticate);
