@@ -2,18 +2,18 @@ const env = process.env.NODE_ENV || 'development';
 
 const configs = {
 	production: {
-		adminAuthToken: 'dFZaGMDEx6Z7',
-		database: 'mongodb://admin:yxe3tEcD7tA9@ds133981.mlab.com:33981/bgzstephen-productiv',
+		adminAuthToken: $ADMIN_AUTH_TOKEN,
+		database: $DATABASE_URL,
 		environment: 'production',
-		jwtSecret: 'rdLsMzC5zhJj',
-		siteAuthToken: 'NY58Avsh8CGe'
+		jwtSecret: $JWT_SECRET,
+		siteAuthToken: $SITE_AUTH_TOKEN
 	},
 	development: {
-		adminAuthToken: 'dFZaGMDEx6Z7',
-		database: 'mongodb://admin:yxe3tEcD7tA9@ds133981.mlab.com:33981/bgzstephen-productiv',
-		environment: 'development',
-		jwtSecret: 'rdLsMzC5zhJj',
-		siteAuthToken: 'NY58Avsh8CGe'
+		adminAuthToken: $ADMIN_AUTH_TOKEN,
+		database: $DATABASE_URL,
+		environment: 'production',
+		jwtSecret: $JWT_SECRET,
+		siteAuthToken: $SITE_AUTH_TOKEN
 	}
 };
 
