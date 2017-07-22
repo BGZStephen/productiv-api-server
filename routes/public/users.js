@@ -32,13 +32,13 @@ module.exports.getUser = function(req, res) {
 
 	// check to ensure user is only able to access their own user profile, even if other id is entered as query param
 	if(userId != req.params.userId) {
-		return res.status(403).send({error: 'Unauthorized access, access denied'});
+		return res.status(403).send('Unauthorized access, access denied');
 	}
 
 	User.findById(userId)
 	.then(user => {
 		if(user == null) {
-			return res.status(500).json({error: 'User not found'});
+			return res.status(500).send('User not found');
 		} else {
 			res.json(user);
 		}
@@ -51,7 +51,7 @@ module.exports.getUser = function(req, res) {
 module.exports.create = function(req, res) {
 	const authorized = Auth.checkToken(req.get('Authorization'));
 	if(!authorized.success) {
-		return res.status(401).json({error: 'Unauthorized access, access denied'});
+		return res.status(401).json(authorized.message);
 	}
 
 	let userObject = new User({
@@ -64,7 +64,7 @@ module.exports.create = function(req, res) {
 	User.find({email: req.body.email})
 	.then(user => {
 		if (user != null) {
-			return res.status(500).json({error: 'Email address already in use'});
+			return res.status(500).send('Email address already in use');
 		}
 		return userObject.save(userObject)
 	})
@@ -89,17 +89,17 @@ module.exports.create = function(req, res) {
 module.exports.authenticate = function(req, res) {
 	const authorized = Auth.checkToken(req.get('Authorization'));
 	if(!authorized.success) {
-		return res.status(401).json({error: 'Unauthorized access, access denied'});
+		return res.status(401).json(authorized.message);
 	}
 
 	User.findOne({email: req.body.email})
 	.then(user => {
 		if(authorized.route == 'admin' && user.role != 'admin') {
-			return res.status(401).json({error: 'Unauthorized access, access denied'});
+			return res.status(401).send('Unauthorized access, access denied');
 		}
 
 		if(user == null) {
-			return res.status(401).json({error: 'Incorrect email address or password'});
+			return res.status(401).send('Incorrect email address or password');
 		}
 
 		bcrypt.compare(req.body.password, user.password)
@@ -115,7 +115,7 @@ module.exports.authenticate = function(req, res) {
 					last_authenticated: new Date().getTime(),
 				});
 			} else {
-				return res.status(401).json({error: 'Incorrect email address or password'});
+				return res.status(401).send('Incorrect email address or password');
 			}
 		})
 	})
@@ -127,7 +127,7 @@ module.exports.authenticate = function(req, res) {
 module.exports.update = function(req, res) {
 	const authorized = Auth.checkToken(req.get('Authorization'));
 	if(!authorized.success) {
-		return res.status(401).json({error: 'Unauthorized access, access denied'});
+		return res.status(401).json(authorized.message);
 	}
 
 	let token = req.get('Token');
@@ -141,11 +141,11 @@ module.exports.update = function(req, res) {
 			if(user.nModified >= 1) {
 				res.sendStatus(200);
 			} else {
-				return res.status(500).json({error: 'User update failed'});
+				return res.status(500).send('User update failed');
 			}
 		})
     .catch(error => {
-      res.status(500).json({error: error});
+      res.status(500).send(error);
     });
 	} else if (req.body.type == 'password') {
 
@@ -156,7 +156,7 @@ module.exports.update = function(req, res) {
 			user.save(res.sendStatus(200));
 		})
 		.catch(error => {
-      res.status(500).json({error: error});
+      res.status(500).send(error);
     });
 	}
 };

@@ -4,11 +4,11 @@ const Config = require('../config')
 
 const checkToken = function(authToken) {
   if(authToken === undefined || authToken === null) {
-    return {success: false, message: {error: 'Authorisation token not supplied'}};
+    return {success: false, message: 'Authorisation token not supplied'};
   }
 
   if (authToken != Config.siteAuthToken && authToken != Config.adminAuthToken) {
-    return {success: false, message: {error: 'Unauthorized access, access denied'}};
+    return {success: false, message: 'Unauthorized access, access denied'};
   }
 
   if (authToken == Config.siteAuthToken) {
