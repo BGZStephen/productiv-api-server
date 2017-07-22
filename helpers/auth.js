@@ -2,22 +2,24 @@ const Config = require('../config')
 
 'user strict'
 
-const routeAuth = function(authToken) {
+const checkToken = function(authToken) {
   if(authToken === undefined || authToken === null) {
-    return false;
-  } else if (authToken != Config.siteAuthToken && authToken != Config.adminAuthToken) {
-    return false;
-  } else if (authToken == Config.siteAuthToken) {
-    return {
-      route: 'site',
-    }
-  } else if (authToken == Config.adminAuthToken) {
-    return {
-      route: 'admin',
-    }
+    return {success: false, message: {error: 'Authorisation token not supplied'}};
+  }
+
+  if (authToken != Config.siteAuthToken && authToken != Config.adminAuthToken) {
+    return {success: false, message: {error: 'Unauthorized access, access denied'}};
+  }
+
+  if (authToken == Config.siteAuthToken) {
+    return {success: true, accessedRoute: 'site'};
+  }
+
+  if (authToken == Config.adminAuthToken) {
+    return {success: true, accessedRoute: 'admin'};
   }
 };
 
 module.exports = {
-  routeAuth
+  checkToken,
 };

@@ -3,6 +3,10 @@ const bcrypt = require('bcryptjs');
 
 // user Schema
 const UserSchema = mongoose.Schema({
+	businesses: [{
+		businessId: String,
+		businessName: String,
+	}],
 	created_on: Date,
 	email: {
 		required: true,
@@ -16,6 +20,11 @@ const UserSchema = mongoose.Schema({
 		type: String,
 		required: true,
 	},
+	modules: [{
+		moduleId: String,
+		moduleName: String,
+		moduleConfig: Object,
+	}],
 	password: String,
 	role: String
 });
@@ -79,9 +88,9 @@ module.exports.getOne = function(userObject) {
 	});
 };
 
-module.exports.update = function(userObject) {
+module.exports.update = function(userId, update) {
 	return new Promise((resolve, reject) => {
-		User.update({_id: userObject._id}, userObject).then(user => {
+		User.update({_id: userId}, update).then(user => {
 			if(user.nModified >= 1) {
 				resolve();
 			} else {
