@@ -1,6 +1,6 @@
-const Config = require('../config')
+const Config = require('../config');
 
-'user strict'
+'user strict';
 
 const checkToken = function(authToken) {
   if(authToken === undefined || authToken === null) {

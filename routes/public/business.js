@@ -1,22 +1,22 @@
 const Config = require('../../config');
 const jwt = require('jsonwebtoken');
-const Auth = require('../../helpers/auth')
+const Auth = require('../../helpers/auth');
 const Business = require('../../models/business');
 const User = require('../../models/user');
 
 module.exports.loadBusiness = function(req, res, next) {
-  const businessId = req.params.businessId || req.body.id
+  const businessId = req.params.businessId || req.body.id;
 
 	Business.findById(businessId)
 	.then(business => {
     if(business == null) {
-			return res.status(500).send('Business not found')
+			return res.status(500).send('Business not found');
 		} else {
-			req.business = business
-			next()
+			req.business = business;
+			next();
 		}
 	})
-  .catch(error => res.status(500).send(error))
+  .catch(error => res.status(500).send(error));
 };
 
 module.exports.createBusiness = function(req, res) {
@@ -30,11 +30,11 @@ module.exports.createBusiness = function(req, res) {
     businessAddress: req.body.businessAddress,
     createdOn: new Date(),
     website: req.body.website,
-  })
+  });
 
   businessObject.save()
   .then(res.sendStatus(200))
-  .catch(error => res.status(500).send(error))
+  .catch(error => res.status(500).send(error));
 };
 
 module.exports.getBusiness = function(req, res) {
@@ -61,7 +61,7 @@ module.exports.getBusiness = function(req, res) {
       return res.status(401).send('You are not associated with this business, access denied');
     }
   });
-}
+};
 
 module.exports.updateBusiness = function(req, res) {
   const authorized = Auth.checkToken(req.get('Authorization'));
@@ -84,12 +84,12 @@ module.exports.updateBusiness = function(req, res) {
     if (businessPresentInUser.length >= 1) {
       Business.update(req.business._id, req.body.updates)
       .then(business => {
-  			if(business.nModified >= 1) {
-  				res.sendStatus(200);
-  			} else {
-  				return res.status(500).send('Business update failed');
-  			}
-  		})
+        if (business.nModified >= 1) {
+          res.sendStatus(200);
+        } else {
+          return res.status(500).send('Business update failed');
+        }
+      })
       .catch(error => {
         res.status(500).send(error);
       });
@@ -97,4 +97,4 @@ module.exports.updateBusiness = function(req, res) {
       return res.status(401).send('You are not associated with this business, access denied');
     }
   });
-}
+};

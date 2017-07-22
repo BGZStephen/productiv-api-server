@@ -1,9 +1,7 @@
 const Config = require('../../config');
-const bcrypt = require('bcryptjs');
-const router = require('express').Router();
 const jwt = require('jsonwebtoken');
 const User = require('../../models/user');
-const Auth = require('../../helpers/auth')
+const Auth = require('../../helpers/auth');
 
 module.exports.getAll = function(req, res) {
 	const authorized = Auth.routeAuth(req.get('Authorization'));

@@ -5,13 +5,14 @@ const User = require('../../models/user');
 const Auth = require('../../helpers/auth')
 
 module.exports.loadUser = function(req, res, next) {
-	const userId = req.params.userId || req.body.id
+	const userId = req.params.userId || req.body.id;
 
 	User.findById(userId)
 	.then(user => {
 		if(user == null) return res.status(500).send('User not found')
 		else {req.user = user; next()}
 	})
+	.catch(error => res.status(500).semd(error));
 };
 
 module.exports.deleteUser = function(req, res) {
@@ -38,8 +39,8 @@ module.exports.getUser = function(req, res) {
 
 module.exports.createUser = function(req, res) {
 	const processCreateUser = async function() {
-		const authorized = Auth.checkToken(req.get('Authorization'));
-		if(!authorized.success) return res.status(401).json(authorized.message);
+		const authorized = await Auth.checkToken(req.get('Authorization'));
+		if (!authorized.success) return res.status(401).json(authorized.message);
 
 		const userExistsCheck = await User.findOne({email: req.body.email})
 		if(userExistsCheck != null) return res.status(500).send('Email address already in use');
