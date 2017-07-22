@@ -63,28 +63,31 @@ module.exports.createUser = function(req, res) {
 		password: req.body.password
 	});
 
-	User.find({email: req.body.email})
-	.then(user => {
-		if (user != null) {
+	const createUser = async function(userObject) {
+		const userExistsCheck = await User.findOne({email: req.body.email})
+		if(userExistsCheck != null) {
 			return res.status(500).send('Email address already in use');
 		}
-		return userObject.save(userObject)
-	})
-	.then(user => {
-		let token = jwt.sign({
-			exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 365),
-			data: {_id: user._id}
-		}, Config.jwtSecret);
 
-		let response = {
-			token,
-			last_authenticated: new Date().getTime(),
-		};
+		userObject.save(userObject)
+		.then(user => {
+			let token = jwt.sign({
+				exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 365),
+				data: {_id: user._id}
+			}, Config.jwtSecret);
 
-		res.status(200).json(response);
-	})
+			let response = {
+				token,
+				last_authenticated: new Date().getTime(),
+			};
+
+			return res.status(200).json(response);
+		})
+	};
+
+	createUser(userObject)
 	.catch(error => {
-		res.status(500).send(error);
+		return res.status(500).send(error);
 	});
 };
 
