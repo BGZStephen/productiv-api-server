@@ -9,8 +9,12 @@ module.exports.loadUser = function(req, res, next) {
 
 	User.findById(userId)
 	.then(user => {
-		if(user == null) return res.status(500).send('User not found')
-		else {req.user = user; next()}
+		if(user == null) {
+			return res.status(500).send('User not found')
+		} else {
+			req.user = user;
+			next();
+		}
 	})
 	.catch(error => res.status(500).semd(error));
 };
@@ -45,7 +49,7 @@ module.exports.createUser = function(req, res) {
 		const userExistsCheck = await User.findOne({email: req.body.email})
 		if(userExistsCheck != null) return res.status(500).send('Email address already in use');
 
-		const user = await new User(req.body).save()
+		const user = await new User(req.body.user).save()
 
 		let token = jwt.sign({
 			exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 365),

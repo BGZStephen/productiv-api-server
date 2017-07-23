@@ -20,81 +20,57 @@ module.exports.loadBusiness = function(req, res, next) {
 };
 
 module.exports.createBusiness = function(req, res) {
-  const authorized = Auth.checkToken(req.get('Authorization'));
-	if(!authorized.success) {
-		return res.status(401).json(authorized.message);
-	}
+  const processCreateBusiness = async function() {
+    const authorized = await Auth.checkToken(req.get('Authorization'));
+    if(!authorized.success) return res.status(401).json(authorized.message);
 
-  let businessObject = new Business({
-    businessName: req.body.businessName,
-    businessAddress: req.body.businessAddress,
-    createdOn: new Date(),
-    website: req.body.website,
-  });
+    businessObject.save(new Business(req.body.business))
+    .then(res.sendStatus(200))
+  };
 
-  businessObject.save()
-  .then(res.sendStatus(200))
+  processCreateBusiness()
   .catch(error => res.status(500).send(error));
 };
 
 module.exports.getBusiness = function(req, res) {
-  const authorized = Auth.checkToken(req.get('Authorization'));
-  if(!authorized.success) {
-    return res.status(401).json(authorized.message);
-  }
+  const processGetBusiness = async function() {
+    const authorized = Auth.checkToken(req.get('Authorization'));
+    if(!authorized.success) return res.status(401).json(authorized.message);
 
-  let decodedJwt = jwt.verify(req.get('Token'), Config.jwtSecret);
-  let userId = decodedJwt.data._id;
-
-  User.findById(userId)
-  .then(user => {
-    // check for the presence of the business within the users businesses array
+    const business = await Business.findById(req.business._id)
     const businessPresentInUser = user.businesses.filter(function(business) {
-      if(business.businessId === req.business._id) {
-        return business;
-      }
+      if(business.businessId === req.business._id) return business;
     });
 
-    if (businessPresentInUser.length >= 1) {
-      return res.json(req.business);
-    } else {
-      return res.status(401).send('You are not associated with this business, access denied');
-    }
-  });
+    if (businessPresentInUser.length === 0) return res.status(401).send('You are not associated with this business, access denied');
+
+    return res.json(req.business);
+  }
+
+  processGetBusiness()
+  .catch(error => res.status(500).send(error))
 };
 
 module.exports.updateBusiness = function(req, res) {
-  const authorized = Auth.checkToken(req.get('Authorization'));
-  if(!authorized.success) {
-    return res.status(401).json(authorized.message);
-  }
+  const processUpdateBusiness = async function() {
+    const authorized = Auth.checkToken(req.get('Authorization'));
+    if(!authorized.success) return res.status(401).json(authorized.message);
 
-  let decodedJwt = jwt.verify(req.get('Token'), Config.jwtSecret);
-  let userId = decodedJwt.data._id;
-
-  User.findById(userId)
-  .then(user => {
-    // check for the presence of the business within the users businesses array
+    const Business = await Business.findById(req.business._id)
     const businessPresentInUser = user.businesses.filter(function(business) {
-      if(business.businessId === req.business._id) {
-        return business;
-      }
+      if(business.businessId === req.business._id) return business;
     });
 
-    if (businessPresentInUser.length >= 1) {
-      Business.update(req.business._id, req.body.updates)
-      .then(business => {
-        if (business.nModified >= 1) {
-          res.sendStatus(200);
-        } else {
-          return res.status(500).send('Business update failed');
-        }
-      })
-      .catch(error => {
-        res.status(500).send(error);
-      });
+    if (businessPresentInUser.length == 0) return res.status(401).send('You are not associated with this business, access denied');
+
+    const updatedBusiness = await Business.update(req.business._id, req.body.updates)
+    if (updatedBusiness.nModified >= 1) {
+      return res.sendStatus(200);
     } else {
-      return res.status(401).send('You are not associated with this business, access denied');
+      return res.status(500).send('Business update failed');
     }
-  });
+  }
+
+  processUpdateBusiness()
+  .catch(error => res.status(500).send(error))
 };
