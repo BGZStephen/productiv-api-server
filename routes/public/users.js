@@ -69,7 +69,7 @@ module.exports.authenticate = function(req, res) {
 		if(!authorized.success) return res.status(401).json(authorized.message);
 
 		const user = await User.findOne({email: req.body.email})
-		if (authorized.route == 'admin' && user.role != 'admin') return res.status(401).send('Unauthorized access, access denied')
+		if (authorized.accessedRoute == 'admin' && user.role != 'admin') return res.status(401).send('Unauthorized access, access denied')
 		if (user == null) return res.status(401).send('Incorrect email address or password');
 
 		const bcyptCompare = bcrypt.compare(req.body.password, user.password)
