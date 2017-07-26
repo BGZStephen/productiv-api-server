@@ -5,11 +5,9 @@ const ColorSchema = mongoose.Schema({
   createdOn: Date,
   createdBy: String,
   hex: String,
-  rgb: {
-    r: Number,
-    g: Number,
-    b: Number,
-  },
+  red: Number,
+  green: Number,
+  blue: Number,
 });
 
 module.exports = mongoose.model('Color', ColorSchema);
