@@ -4,21 +4,6 @@ const jwt = require('jsonwebtoken');
 const User = require('../../models/user');
 const Auth = require('../../helpers/auth')
 
-module.exports.loadUser = function(req, res, next) {
-	const userId = req.params.userId || req.body.id;
-
-	User.findById(userId)
-	.then(user => {
-		if(user == null) {
-			return res.status(500).send('User not found')
-		} else {
-			req.user = user;
-			next();
-		}
-	})
-	.catch(error => res.status(500).semd(error));
-};
-
 module.exports.deleteUser = function(req, res) {
 	const authorized = Auth.checkToken(req.get('Authorization'));
 	if(!authorized.success) return res.status(401).json(authorized.message);

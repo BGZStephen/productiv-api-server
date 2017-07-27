@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const loaders = require('../../helpers/loaders')
 const users = require('./users');
 const businesses = require('./businesses');
 const colours = require('./colours')
@@ -12,6 +13,7 @@ router.all('/users/:id**', users.loadUser);
 router.delete('/users/:id', users.deleteUser);
 router.get('/users/:id', users.getUser);
 router.put('/users/:id', users.updateUser);
+router.all('/users/:usreId**', loaders.loadParameters);
 
 // -- Colour library
 // router.put('/users/:userId/colour-library/:colourId', colourLibrary.addColour)
