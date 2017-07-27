@@ -9,17 +9,17 @@ const colourLibrary = require('./colour-library')
 // Users -- start
 router.post('/users', users.createUser);
 router.post('/users/authenticate', users.authenticate);
-router.all('/users/:id**', users.loadUser);
-router.delete('/users/:id', users.deleteUser);
-router.get('/users/:id', users.getUser);
-router.put('/users/:id', users.updateUser);
 router.all('/users/:usreId**', loaders.loadParameters);
+router.delete('/users/:usreId', users.deleteUser);
+router.get('/users/:usreId', users.getUser);
+router.put('/users/:usreId', users.updateUser);
 
 // -- Colour library
 // router.put('/users/:userId/colour-library/:colourId', colourLibrary.addColour)
 // router.delete('/users/:userId/colour-library/:colourId', colourLibrary.addColour)
 // -- Colours
-// router.post('/users/:id/palettes/:id/colours', colours.addToPalette);
+router.post('/users/:usreId/colours', colours.createColour);
+// router.put('/users/:id/palettes/:id/colours', colours.addToPalette);
 // router.delete('/users/:userId/palettes/:paletteId/colours/:colourId', colours.removeFromPalette);
 // -- Palettes
 // router.post('/users/:userId/palettes', palettes.createPalete);
@@ -35,9 +35,8 @@ router.all('/users/:usreId**', loaders.loadParameters);
 // router.get('/businesses/:id', businesses.getBusiness);
 // router.put('/businesses/:id', businesses.updateBusiness);
 
-// Colors
+// Colours
 // router.get('/colours', colours.gteAllColours);
 // router.get('/colours/:id', colours.getColour);
-// router.post('/colours', colours.createColour);
 
 module.exports = router;
