@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 // module Schema
-const ColorSchema = mongoose.Schema({
+const ColourSchema = mongoose.Schema({
   createdOn: Date,
   createdBy: String,
   hex: String,
@@ -10,4 +10,4 @@ const ColorSchema = mongoose.Schema({
   blue: Number,
 });
 
-module.exports = mongoose.model('Color', ColorSchema);
+module.exports = mongoose.model('Colour', ColourSchema);
