@@ -6,6 +6,6 @@ const colours = require('./colours');
 router.get('/users', users.getAll);
 
 // Palettes
-router.delete('/colours/:id', colours.deleteColour);
+// router.delete('/colours/:id', colours.deleteColour);
 
 module.exports = router;
