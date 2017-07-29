@@ -2,10 +2,10 @@ const router = require('express').Router();
 const users = require('./users');
 const colours = require('./colours');
 const loaders = require('../../helpers/loaders');
-const auth = require('../../helpers/auth');
+const checkToken = require('../../helpers/auth').checkToken;
 
 // Users
-router.all('/users/:userId*', auth.checkToken, loaders.loadParameters);
+router.all('/users/:userId*', checkToken, loaders.loadParameters);
 router.delete('/users/:userId', users.deleteUser);
 router.get('/users/:userId', users.getUser);
 router.put('/users/:userId', users.updateUser);
@@ -27,8 +27,9 @@ router.put('/users/:userId', users.updateUser);
 // Users - end
 
 // Business
+router.all('/businesses/*', checkToken);
 // router.post('/businesses', businesses.createBusiness);
-// router.get('/businesses/:businessId**', loaders.loadParameters);
+router.get('/businesses/:businessId**', loaders.loadParameters);
 // router.get('/businesses/:businessId', businesses.getBusiness);
 // router.put('/businesses/:businessId', businesses.updateBusiness);
 
