@@ -3,7 +3,7 @@ const Config = require('../config');
 'user strict';
 
 const checkToken = function(authToken) {
-  if(authToken === undefined || authToken === null) {
+  if(!authToken) {
     return {success: false, message: 'Authorisation token not supplied'};
   }
 
