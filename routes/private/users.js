@@ -1,8 +1,9 @@
 const Config = require('../../config');
 const jwt = require('jsonwebtoken');
-const User = require('../../models/user');
 const Auth = require('../../helpers/auth');
 const ColourLibrary = require('./colour-library');
+const Mailer = require('../../helpers/mailer');
+const User = require('../../models/user');
 
 module.exports.getAll = async function(req, res) {
 	const decodedJwt = jwt.verify(req.get('Token'), Config.jwtSecret);
