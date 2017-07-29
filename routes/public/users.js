@@ -66,8 +66,14 @@ module.exports.authenticate = async function(req, res) {
 	if(!authorized.success) return res.status(401).json(authorized.message);
 
 	const user = await User.findOne({email: req.body.email})
-	if (authorized.accessedRoute == 'admin' && user.role != 'admin') return res.status(401).send('Unauthorized access, access denied')
-	if (user == null) return res.status(401).send('Incorrect email address or password');
+
+	if (authorized.accessedRoute == 'admin' && user.role != 'admin') {
+		return res.status(401).send('Unauthorized access, access denied')
+	}
+
+	if (user == null) {
+		return res.status(401).send('Incorrect email address or password');
+	}
 
 	const bcyptCompare = await bcrypt.compare(req.body.password, user.password)
 	if(bcyptCompare) {
@@ -90,9 +96,8 @@ module.exports.updateUser = async function(req, res) {
 
 	const decodedJwt = jwt.verify(req.get('Token'), Config.jwtSecret);
 	const userId = decodedJwt.data._id;
-
 	if(req.body.type == 'profile') {
-		const user = await User.update(userId, req.body.updates)
+		const user = await User.update({_id: userId}, req.body.updates)
 		if (user.nModified >= 1) {
 			return res.sendStatus(200);
 		} else {
@@ -101,7 +106,14 @@ module.exports.updateUser = async function(req, res) {
 	};
 
 	if (req.body.type == 'password') {
-		req.user.password = bcrypt.hashSync(req.body.password, 8);
-		req.user.markModified('password').save(res.sendStatus(200));
+		const bcyptCompare = await bcrypt.compare(req.body.password, req.user.password)
+		if (!bcyptCompare) {
+			return res.status(403).send('Current password does not match stored password');
+		}
+		req.user.password = bcrypt.hashSync(req.body.newPassword, 8);
+		console.log(req.user)
+		req.user.markModified('password')
+		req.user.save();
+		res.sendStatus(200);
 	};
 };
