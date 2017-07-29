@@ -7,19 +7,39 @@ async function loadParameters(req, res, next) {
 
 	try {
 		if(req.params.userId || req.body.userId) {
-			req.user = await loadUser
+			const user = await loadUser
+			if(user) {
+				req.user = user
+			} else {
+				res.status(404).send('User not found');
+			}
 		}
 
 		if(req.params.colourId || req.body.colourId) {
-			req.colour = await loadColour
+			const colour = await loadColour
+			if(colour) {
+				req.colour = colour
+			} else {
+				res.status(404).send('Colour not found');
+			}
 		}
 
 		if(req.params.businessId || req.body.businessId) {
-			req.business = await loadBusiness
+			const business = await loadBusiness
+			if(business) {
+				req.business = business
+			} else {
+				res.status(404).send('Business not found');
+			}
 		}
 
 		if(req.params.colourLibraryId || req.body.colourLibraryId) {
-			req.colourLibrary = await loadColourLibrary
+			const colourLibrary = await loadColourLibrary
+			if(colourLibrary) {
+				req.colourLibrary = colourLibrary
+			} else {
+				res.status(404).send('Colour library not found');
+			}
 		}
 
 	} catch (error) {
@@ -30,68 +50,47 @@ async function loadParameters(req, res, next) {
 	next()
 };
 
-function loadUser() {
+async function loadUser() {
 	const userId = req.params.userId || req.body.userId;
 
-	User.findById(usreId)
-	.then(user => {
-		if(user == null) {
-			throw new Error('User not found');
-		} else {
-			return user;
-		}
-	})
-	.catch(error => {
-		throw new Error(error)
-	});
+	try {
+		const user = await User.findById(usreId);
+		return user;
+	} catch (err) {
+		console.log(err)
+	}
 };
 
-function loadBusiness() {
+async function loadBusiness() {
 	const businessId = req.params.businessId || req.body.businessId;
 
-	Business.findById(businessId)
-	.then(business => {
-		if(business == null) {
-			throw new Error('Colour not found');
-		} else {
-			return business;
-		}
-	})
-	.catch(error => {
-		throw new Error(error)
-	});
+	try {
+		const business = await Business.findById(businessId);
+		return business;
+	} catch (err) {
+		console.log(error)
+	}
 };
 
-function loadColour() {
+async function loadColour() {
 	const colourId = req.params.colourId || req.body.colourId;
 
-	Colour.findById(colourId)
-	.then(colour => {
-		if(colour == null) {
-			throw new Error('Colour not found');
-		} else {
-			return colour;
-		}
-	})
-	.catch(error => {
-		throw new Error(error)
-	});
+	try {
+		const colour = await Colour.findById(colourId)
+		return colour;
+	} catch (err) {
+		console.log(err)
+	}
 };
 
-function loadColourLibrary() {
-	const colourLibrary = req.params.colourLibraryId || req.body.colourLibraryId;
+async function loadColourLibrary() {
+	const colourLibraryId = req.params.colourLibraryId || req.body.colourLibraryId;
 
-	ColourLibrary.findById(colourLibrary)
-	.then(colourLibrary => {
-		if(colourLibrary == null) {
-			throw new Error('Colour Library not found');
-		} else {
-			return colourLibrary;
-		}
-	})
-	.catch(error => {
-		throw new Error(error)
-	});
+	try {
+		const colourLibrary = await ColourLibrary.findById(colourLibraryId);
+	} catch (err) {
+		console.log(err);
+	}
 };
 
 module.exports = {
