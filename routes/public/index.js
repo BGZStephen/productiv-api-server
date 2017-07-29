@@ -36,7 +36,7 @@ router.post('/users/:usreId/colours', colours.createColour);
 // router.put('/businesses/:id', businesses.updateBusiness);
 
 // Colours
-// router.get('/colours', colours.gteAllColours);
-// router.get('/colours/:id', colours.getColour);
+router.get('/colours', colours.getAllColours);
+router.get('/colours/:id', colours.getColour);
 
 module.exports = router;
