@@ -9,10 +9,10 @@ const colourLibrary = require('./colour-library')
 // Users -- start
 router.post('/users', users.createUser);
 router.post('/users/authenticate', users.authenticate);
-router.all('/users/:usreId**', loaders.loadParameters);
-router.delete('/users/:usreId', users.deleteUser);
-router.get('/users/:usreId', users.getUser);
-router.put('/users/:usreId', users.updateUser);
+router.all('/users/:userId*', loaders.loadParameters);
+router.delete('/users/:userId', users.deleteUser);
+router.get('/users/:userId', users.getUser);
+router.put('/users/:userId', users.updateUser);
 
 // -- Colour library
 // router.put('/users/:userId/colour-library/:colourId', colourLibrary.addColour)
