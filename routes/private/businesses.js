@@ -3,18 +3,17 @@ const jwt = require('jsonwebtoken');
 const Business = require('../../models/business');
 
 module.exports.createBusiness = async function(req, res) {
-    const authorized = await Auth.checkToken(req.get('Authorization'));
-    if(!authorized.success) {
-      return res.status(401).json(authorized.message);
-    }
+  const authorized = await Auth.checkToken(req.get('Authorization'));
+  if(!authorized.success) {
+    return res.status(401).json(authorized.message);
+  }
 
-    try {
-      await businessObject.save(new Business(req.body.business))
-      res.sendStatus(200)
-    } catch (error) {
-      res.status(500).send(error)
-    }
-  };
+  try {
+    await businessObject.save(new Business(req.body.business))
+    res.sendStatus(200)
+  } catch (error) {
+    res.status(500).send(error)
+  }
 };
 
 module.exports.getBusiness = async function(req, res) {

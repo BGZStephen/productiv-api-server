@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const ColourSchema = require('./color')
+const ColourSchema = require('mongoose').model('Colour').schema
 
 // palette Schema
 const PaletteSchema = mongoose.Schema({
