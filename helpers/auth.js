@@ -2,23 +2,22 @@ const Config = require('../config');
 
 'user strict';
 
-const checkToken = function(authToken) {
+function checkToken(req, res, next) {
+  const authToken = req.get('Authorization')
+
   if(!authToken) {
-    return {success: false, message: 'Authorisation token not supplied'};
+    console.log('Token not supplied');
+    res.sendStatus(403)
   }
 
   if (authToken != Config.siteAuthToken && authToken != Config.adminAuthToken) {
-    return {success: false, message: 'Unauthorized access, access denied'};
+    console.log('Auth tokens don\'t match any tokens in config');
+    res.sendStatus(403)
   }
 
-  if (authToken == Config.siteAuthToken) {
-    return {success: true, accessedRoute: 'site'};
-  }
-
-  if (authToken == Config.adminAuthToken) {
-    return {success: true, accessedRoute: 'admin'};
-  }
+  next()
 };
+
 
 module.exports = {
   checkToken,
