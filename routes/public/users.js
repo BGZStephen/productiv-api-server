@@ -9,7 +9,7 @@ module.exports.deleteUser = async function(req, res) {
 	if(!authorized.success) return res.status(401).json(authorized.message);
 
 	try {
-		const user = await User.delete(req.params.userId);
+		const user = await User.findById(req.params.userId).remove();
 		res.sendStatus(200);
 	} catch (error) {
 		res.status(500).send(error);
@@ -30,8 +30,6 @@ module.exports.getUser = function(req, res) {
 		return res.status(403).send('Unauthorized access, access denied');
 	}
 
-	console.log(req.user)
-
 	return res.json(req.user);
 };
 
@@ -49,7 +47,7 @@ module.exports.createUser = async function(req, res) {
 			email: req.body.email,
 			firstName: req.body.firstName,
 			lastName: req.body.lastName,
-			password: req.body.password,
+			password: bcrypt.hashSync(req.body.password, 8),
 		}).save()
 
 		const token = jwt.sign({
@@ -71,7 +69,7 @@ module.exports.authenticate = async function(req, res) {
 	if (authorized.accessedRoute == 'admin' && user.role != 'admin') return res.status(401).send('Unauthorized access, access denied')
 	if (user == null) return res.status(401).send('Incorrect email address or password');
 
-	const bcyptCompare = bcrypt.compare(req.body.password, user.password)
+	const bcyptCompare = await bcrypt.compare(req.body.password, user.password)
 	if(bcyptCompare) {
 		const token = jwt.sign({
 			exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 365),
