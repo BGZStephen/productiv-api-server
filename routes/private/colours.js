@@ -16,6 +16,7 @@ module.exports.createColour = function(req, res) {
     res.json(result)
   })
   .catch(error => {
+    winston.log('debug', 'Colour creation failed');
     res.status(500).send(error)
   })
 }
@@ -29,6 +30,7 @@ module.exports.getAllColours = async function(req, res) {
   if(colours.length > 0) {
     res.json(colours);
   } else {
+    winston.log('debug', 'No colours in array');
     res.status(404).send('No colours found');
   }
 }

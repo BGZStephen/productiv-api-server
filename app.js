@@ -3,6 +3,13 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const winston = require('winston');
+
+if(Config.environment != 'development') {
+	winston.remove(winston.transports.Console);
+} else {
+	winston.level = 'debug';
+}
 
 // mongoose connection
 mongoose.connect(Config.database);

@@ -10,6 +10,7 @@ async function loadParameters(req, res, next) {
 			if(user) {
 				req.user = user
 			} else {
+				winston.log('debug', 'User not found');
 				res.status(404).send('User not found');
 			}
 		}
@@ -19,6 +20,7 @@ async function loadParameters(req, res, next) {
 			if(colour) {
 				req.colour = colour
 			} else {
+				winston.log('debug', 'Colour not found');
 				res.status(404).send('Colour not found');
 			}
 		}
@@ -28,6 +30,7 @@ async function loadParameters(req, res, next) {
 			if(business) {
 				req.business = business
 			} else {
+				winston.log('debug', 'Business not found');
 				res.status(404).send('Business not found');
 			}
 		}
@@ -37,11 +40,12 @@ async function loadParameters(req, res, next) {
 			if(colourLibrary) {
 				req.colourLibrary = colourLibrary
 			} else {
+				winston.log('debug', 'Colour library not found');
 				res.status(404).send('Colour library not found');
 			}
 		}
 	} catch (error) {
-		console.log(error)
+		winston.log('debug', error);
 		return res.sendStatus(500)
 	}
 	next()
@@ -53,8 +57,8 @@ async function loadUser(req) {
 	try {
 		const user = await User.findById(userId);
 		return user;
-	} catch (err) {
-		console.log(err)
+	} catch (error) {
+		winston.log('debug', error);
 	}
 };
 
@@ -64,8 +68,8 @@ async function loadBusiness(req) {
 	try {
 		const business = await Business.findById(businessId);
 		return business;
-	} catch (err) {
-		console.log(error)
+	} catch (error) {
+		winston.log('debug', error);
 	}
 };
 
@@ -75,8 +79,8 @@ async function loadColour(req) {
 	try {
 		const colour = await Colour.findById(colourId)
 		return colour;
-	} catch (err) {
-		console.log(err)
+	} catch (error) {
+		winston.log('debug', error);
 	}
 };
 
@@ -85,8 +89,8 @@ async function loadColourLibrary(req) {
 
 	try {
 		const colourLibrary = await ColourLibrary.findById(colourLibraryId);
-	} catch (err) {
-		console.log(err);
+	} catch (error) {
+		winston.log('debug', error);
 	}
 };
 

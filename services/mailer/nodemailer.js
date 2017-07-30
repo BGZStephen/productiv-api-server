@@ -29,7 +29,7 @@ async function sendMail(options, template) {
     if (error) {
       return console.log(error);
     }
-    console.log('Message %s sent: %s', info.messageId, info.response);
+    winston.info('Message %s sent: %s', info.messageId, info.response);
   });
 }
 

@@ -1,5 +1,6 @@
 const Config = require('../../config');
 const bcrypt = require('bcryptjs');
+const winston = require('winston')
 const jwt = require('jsonwebtoken');
 const Mailer = require('../../services/mailer/nodemailer');
 const User = require('../../models/user');
@@ -7,6 +8,7 @@ const User = require('../../models/user');
 module.exports.createUser = async function(req, res) {
 	const userExistsCheck = await User.findOne({email: req.body.email})
 	if(userExistsCheck != null) {
+		winston.log('debug', 'User already exists');
 		return res.status(500).send('Email address already in use');
 	}
 
@@ -15,7 +17,8 @@ module.exports.createUser = async function(req, res) {
 			email: req.body.email,
 			firstName: req.body.firstName,
 			lastName: req.body.lastName,
-			password: bcrypt.hashSync(req.body.password, 8),
+			password: bcrypt.hashSync(req.body.password.blahblah, 8),
+			role: 'user',
 		}).save()
 
 		const token = jwt.sign({
@@ -25,18 +28,16 @@ module.exports.createUser = async function(req, res) {
 
 		return res.status(200).json({token, last_authenticated: new Date().getTime()});
 	} catch (error) {
-		res.status(500).send(error)
+		winston.log('debug', error);
+		res.sendStatus(500)
 	}
 }
 
 module.exports.authenticate = async function(req, res) {
 	const user = await User.findOne({email: req.body.email})
 
-	if (authorized.accessedRoute == 'admin' && user.role != 'admin') {
-		return res.status(401).send('Unauthorized access, access denied')
-	}
-
 	if (user == null) {
+		winston.log('debug', 'User not found');
 		return res.status(401).send('Incorrect email address or password');
 	}
 
@@ -51,6 +52,7 @@ module.exports.authenticate = async function(req, res) {
 			last_authenticated: new Date().getTime(),
 		});
 	} else {
+		winston.log('debug', 'Incorrect password');
 		return res.status(401).send('Incorrect email address or password');
 	}
 };

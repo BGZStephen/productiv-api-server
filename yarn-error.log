@@ -1,5 +1,5 @@
 Arguments: 
-  /usr/bin/nodejs /usr/share/yarn/bin/yarn.js add bluebird --save
+  /usr/bin/nodejs /usr/share/yarn/bin/yarn.js add winston
 
 PATH: 
   /home/stephen/bin:/home/stephen/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
@@ -17,6 +17,7 @@ npm manifest:
   {
     "dependencies": {
       "bcryptjs": "^2.4.3",
+      "bluebird": "^3.5.0",
       "body-parser": "^1.17.2",
       "cors": "^2.8.3",
       "ejs": "^2.5.7",
@@ -236,6 +237,10 @@ Lockfile:
   bluebird@2.10.2:
     version "2.10.2"
     resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-2.10.2.tgz#024a5517295308857f14f91f1106fc3b555f446b"
+  
+  bluebird@^3.5.0:
+    version "3.5.0"
+    resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.0.tgz#791420d7f551eea2897453a8a77653f96606d67c"
   
   body-parser@^1.17.2:
     version "1.17.2"
@@ -2293,4 +2298,4 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/xtend/-/xtend-4.0.1.tgz#a5c6d532be656e23db820efb943a1f04998d63af"
 
 Trace: 
-  Error: EACCES: permission denied, unlink '/home/stephen/Downloads/productiv/productiv-server/node_modules/.bin/acorn'
+  Error: EACCES: permission denied, unlink '/home/stephen/Downloads/productiv/api/node_modules/.bin/acorn'
