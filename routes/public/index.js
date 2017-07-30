@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const loaders = require('../../helpers/loaders')
+const loaders = require('../../services/loaders')
 const users = require('./users');
 const businesses = require('./businesses');
 const colours = require('./colours')

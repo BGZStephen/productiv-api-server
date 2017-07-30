@@ -1,5 +1,5 @@
 Arguments: 
-  /usr/bin/nodejs /usr/share/yarn/bin/yarn.js add nodemailer --save
+  /usr/bin/nodejs /usr/share/yarn/bin/yarn.js add bluebird --save
 
 PATH: 
   /home/stephen/bin:/home/stephen/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
@@ -19,10 +19,12 @@ npm manifest:
       "bcryptjs": "^2.4.3",
       "body-parser": "^1.17.2",
       "cors": "^2.8.3",
+      "ejs": "^2.5.7",
       "eslint": "^4.2.0",
       "express": "^4.15.3",
       "jsonwebtoken": "^7.4.1",
       "mongoose": "^4.11.1",
+      "nodemailer": "^4.0.1",
       "nodemon": "^1.11.0"
     },
     "devDependencies": {
@@ -524,6 +526,10 @@ Lockfile:
   ee-first@1.1.1:
     version "1.1.1"
     resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
+  
+  ejs@^2.5.7:
+    version "2.5.7"
+    resolved "https://registry.yarnpkg.com/ejs/-/ejs-2.5.7.tgz#cc872c168880ae3c7189762fd5ffc00896c9518a"
   
   encodeurl@~1.0.1:
     version "1.0.1"
@@ -1522,6 +1528,10 @@ Lockfile:
       semver "^5.3.0"
       tar "^2.2.1"
       tar-pack "^3.4.0"
+  
+  nodemailer@^4.0.1:
+    version "4.0.1"
+    resolved "https://registry.yarnpkg.com/nodemailer/-/nodemailer-4.0.1.tgz#b95864b07facee8287e8232effd6f1d56ec75ab2"
   
   nodemon@^1.11.0:
     version "1.11.0"

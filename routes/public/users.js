@@ -1,8 +1,8 @@
 const Config = require('../../config');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const Mailer = require('../../services/mailer/nodemailer');
 const User = require('../../models/user');
-const Auth = require('../../helpers/auth')
 
 module.exports.createUser = async function(req, res) {
 	const userExistsCheck = await User.findOne({email: req.body.email})

@@ -1,14 +1,15 @@
 const router = require('express').Router();
-const users = require('./users');
-const colours = require('./colours');
-const loaders = require('../../helpers/loaders');
-const checkToken = require('../../helpers/auth').checkToken;
+const CheckToken = require('../../services/auth').checkToken;
+const Loaders = require('../../services/loaders');
+const Colours = require('./colours');
+const ColourLibrary = require('./colour-library');
+const Users = require('./users');
 
 // Users
-router.all('/users/:userId*', checkToken, loaders.loadParameters);
-router.delete('/users/:userId', users.deleteUser);
-router.get('/users/:userId', users.getUser);
-router.put('/users/:userId', users.updateUser);
+router.all('/users/:userId*', CheckToken, Loaders.loadParameters);
+router.delete('/users/:userId', Users.deleteUser);
+router.get('/users/:userId', Users.getUser);
+router.put('/users/:userId', Users.updateUser);
 
 // -- Colour library
 // router.put('/users/:userId/colour-library/:colourLibraryId/colours/:colourId', colourLibrary.addColour)
@@ -27,9 +28,9 @@ router.put('/users/:userId', users.updateUser);
 // Users - end
 
 // Business
-router.all('/businesses/*', checkToken);
+router.all('/businesses/*', CheckToken);
 // router.post('/businesses', businesses.createBusiness);
-router.get('/businesses/:businessId**', loaders.loadParameters);
+router.get('/businesses/:businessId**', Loaders.loadParameters);
 // router.get('/businesses/:businessId', businesses.getBusiness);
 // router.put('/businesses/:businessId', businesses.updateBusiness);
 

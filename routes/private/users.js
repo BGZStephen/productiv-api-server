@@ -1,8 +1,7 @@
 const Config = require('../../config');
 const jwt = require('jsonwebtoken');
-const Auth = require('../../helpers/auth');
 const ColourLibrary = require('./colour-library');
-const Mailer = require('../../helpers/mailer');
+const Mailer = require('../../services/mailer/nodemailer');
 const User = require('../../models/user');
 
 module.exports.getAll = async function(req, res) {
