@@ -5,7 +5,9 @@ const ColourSchema = require('mongoose').model('Colour').schema
 const ColourLibrarySchema = mongoose.Schema({
   createdOn: Date,
   createdBy: String,
-  colours: [ColourSchema]
+  colours: [ColourSchema],
+  name: String,
+  description: String,
 });
 
 module.exports = mongoose.model('ColourLibrary', ColourLibrarySchema);
