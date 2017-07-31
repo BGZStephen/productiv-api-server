@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const Mailer = require('../../services/mailer/nodemailer');
 const User = require('../../models/user');
 
-module.exports.createUser = async function(req, res) {
+module.exports.create = async function(req, res) {
 	const userExistsCheck = await User.findOne({email: req.body.email})
 	if(userExistsCheck != null) {
 		winston.log('debug', 'User already exists');
@@ -17,7 +17,7 @@ module.exports.createUser = async function(req, res) {
 			email: req.body.email,
 			firstName: req.body.firstName,
 			lastName: req.body.lastName,
-			password: bcrypt.hashSync(req.body.password.blahblah, 8),
+			password: bcrypt.hashSync(req.body.password, 8),
 			role: 'user',
 		}).save()
 

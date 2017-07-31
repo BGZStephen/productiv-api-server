@@ -1,7 +1,8 @@
 const Config = require('../../config');
 const Colour = require('../../models/colours/colour');
+const winston = require('winston');
 
-module.exports.createColour = function(req, res) {
+async function createColour(req, res) {
   const colourObject = new Colour({
     createdOn: new Date(),
     createdBy: req.body.userId,
@@ -11,26 +12,31 @@ module.exports.createColour = function(req, res) {
     blue: req.body.blue,
   })
 
-  colourObject.save()
-  .then(result => {
-    res.json(result)
-  })
-  .catch(error => {
+  try {
+    const colour = await colourObject.save()
+    res.sendStatus(200);
+  } catch(error) {
     winston.log('debug', 'Colour creation failed');
-    res.status(500).send(error)
-  })
+    res.status(500).send(error);
+  }
 }
 
-module.exports.getColour = function(req, res) {
+function getOne(req, res) {
   res.json(req.colour);
 }
 
-module.exports.getAllColours = async function(req, res) {
-  let colours = await Colour.find({});
+async function getAll(req, res) {
+  const colours = await Colour.find({});
   if(colours.length > 0) {
     res.json(colours);
   } else {
     winston.log('debug', 'No colours in array');
     res.status(404).send('No colours found');
   }
+}
+
+module.exports = {
+  createColour,
+  getOne,
+  getAll
 }

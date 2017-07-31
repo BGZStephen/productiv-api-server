@@ -8,9 +8,9 @@ const Users = require('./users');
 
 // Users
 router.all('/users/:userId*', CheckToken, Loaders.loadParameters);
-router.delete('/users/:userId', Users.deleteUser);
-router.get('/users/:userId', Users.getUser);
-router.put('/users/:userId', Users.updateUser);
+router.delete('/users/:userId', Users.deleteOne);
+router.get('/users/:userId', Users.getOne);
+router.put('/users/:userId', Users.updateOne);
 
 // -- Colour library
 // router.put('/users/:userId/colour-library/:colourLibraryId/colours/:colourId', colourLibrary.addColour)
@@ -30,13 +30,13 @@ router.put('/users/:userId', Users.updateUser);
 
 // Business
 router.all('/businesses/*', CheckToken);
-router.post('/businesses', Businesses.createBusiness);
+router.post('/businesses', Businesses.create);
 router.get('/businesses/:businessId**', Loaders.loadParameters);
-router.get('/businesses/:businessId', Businesses.getBusiness);
-router.put('/businesses/:businessId', Businesses.updateBusiness);
+router.get('/businesses/:businessId', Businesses.getOne);
+router.put('/businesses/:businessId', Businesses.updateOne);
 
 // Colours
-router.get('/colours', Colours.getAllColours);
-router.get('/colours/:id', Colours.getColour);
+router.get('/colours', Colours.getAll);
+router.get('/colours/:id', Colours.getOne);
 
 module.exports = router;

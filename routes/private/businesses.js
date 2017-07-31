@@ -2,7 +2,7 @@ const Config = require('../../config');
 const jwt = require('jsonwebtoken');
 const Business = require('../../models/business');
 
-module.exports.createBusiness = async function(req, res) {
+async function create(req, res) {
   const authorized = await Auth.checkToken(req.get('Authorization'));
   if(!authorized.success) {
     winston.log('debug', 'User failed authorized check');
@@ -18,7 +18,7 @@ module.exports.createBusiness = async function(req, res) {
   }
 };
 
-module.exports.getBusiness = async function(req, res) {
+async function getOne(req, res) {
   try {
     const business = await Business.findById(req.business._id)
     const businessPresentInUser = user.businesses.filter(function(business) {
@@ -36,7 +36,7 @@ module.exports.getBusiness = async function(req, res) {
   }
 };
 
-module.exports.updateBusiness = async function(req, res) {
+async function updateOne(req, res) {
   try {
     const Business = await Business.findById(req.business._id)
     const businessPresentInUser = user.businesses.filter(function(business) {
@@ -60,3 +60,9 @@ module.exports.updateBusiness = async function(req, res) {
     res.status(500).send(error)
   }
 };
+
+module.exports = {
+  create,
+  getOne,
+  updateOne
+}

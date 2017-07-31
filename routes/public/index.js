@@ -7,7 +7,7 @@ const palettes = require('./palettes')
 const colourLibrary = require('./colour-library')
 
 // Users -- start
-router.post('/users', users.createUser);
+router.post('/users', users.create);
 router.post('/users/authenticate', users.authenticate);
 
 module.exports = router;

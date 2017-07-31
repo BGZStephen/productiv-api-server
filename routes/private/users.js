@@ -4,7 +4,7 @@ const ColourLibrary = require('./colour-library');
 const Mailer = require('../../services/mailer/nodemailer');
 const User = require('../../models/user');
 
-module.exports.getAll = async function(req, res) {
+async function getAll(req, res) {
 	const decodedJwt = jwt.verify(req.get('Token'), Config.jwtSecret);
 	const role = decodedJwt.data.role;
 
@@ -26,7 +26,7 @@ module.exports.getAll = async function(req, res) {
 	}
 }
 
-module.exports.deleteUser = async function(req, res) {
+async function deleteOne(req, res) {
 	try {
 		const user = await User.findById(req.params.userId).remove();
 		res.sendStatus(200);
@@ -36,7 +36,7 @@ module.exports.deleteUser = async function(req, res) {
 	}
 };
 
-module.exports.getUser = function(req, res) {
+function getOne(req, res) {
 	const decodedJwt = jwt.verify(req.get('Token'), Config.jwtSecret);
 	const userId = decodedJwt.data._id;
 
@@ -49,7 +49,7 @@ module.exports.getUser = function(req, res) {
 	return res.json(req.user);
 };
 
-module.exports.updateUser = async function(req, res) {
+async function updateOne(req, res) {
 	const decodedJwt = jwt.verify(req.get('Token'), Config.jwtSecret);
 	const userId = decodedJwt.data._id;
 	if(req.body.type == 'profile') {
@@ -74,3 +74,10 @@ module.exports.updateUser = async function(req, res) {
 		res.sendStatus(200);
 	};
 };
+
+module.exports = {
+	getAll,
+	deleteOne,
+	getOne,
+	updateOne
+}
