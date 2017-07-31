@@ -1,4 +1,5 @@
 const Config = require('../config');
+const winston = require('winston');
 
 'user strict';
 

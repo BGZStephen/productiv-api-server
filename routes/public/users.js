@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const Mailer = require('../../services/mailer/nodemailer');
 const User = require('../../models/user');
 
-module.exports.create = async function(req, res) {
+async function create(req, res) {
 	const userExistsCheck = await User.findOne({email: req.body.email})
 	if(userExistsCheck != null) {
 		winston.log('debug', 'User already exists');
@@ -26,19 +26,19 @@ module.exports.create = async function(req, res) {
 			data: {_id: user._id, role: user.role}
 		}, Config.jwtSecret);
 
-		return res.status(200).json({token, last_authenticated: new Date().getTime()});
+		res.status(200).json({token, last_authenticated: new Date().getTime()});
 	} catch (error) {
 		winston.log('debug', error);
 		res.sendStatus(500)
 	}
 }
 
-module.exports.authenticate = async function(req, res) {
+async function authenticate(req, res) {
 	const user = await User.findOne({email: req.body.email})
 
 	if (user == null) {
 		winston.log('debug', 'User not found');
-		return res.status(401).send('Incorrect email address or password');
+		res.status(401).send('Incorrect email address or password');
 	}
 
 	const bcyptCompare = await bcrypt.compare(req.body.password, user.password)
@@ -53,6 +53,11 @@ module.exports.authenticate = async function(req, res) {
 		});
 	} else {
 		winston.log('debug', 'Incorrect password');
-		return res.status(401).send('Incorrect email address or password');
+		res.status(401).send('Incorrect email address or password');
 	}
 };
+
+module.exports = {
+	create,
+	authenticate
+}

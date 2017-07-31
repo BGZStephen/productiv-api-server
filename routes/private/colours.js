@@ -1,6 +1,6 @@
 const Config = require('../../config');
-const Colour = require('../../models/colours/colour');
 const winston = require('winston');
+const Colour = require('../../models/colours/colour');
 
 async function createColour(req, res) {
   const colourObject = new Colour({

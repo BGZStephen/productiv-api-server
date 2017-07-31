@@ -1,5 +1,6 @@
 const Config = require('../../config');
 const jwt = require('jsonwebtoken');
+const winston = require('winston');
 const ColourLibrary = require('./colour-library');
 const Mailer = require('../../services/mailer/nodemailer');
 const User = require('../../models/user');

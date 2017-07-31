@@ -1,5 +1,6 @@
 const Config = require('../../config');
 const jwt = require('jsonwebtoken');
+const winston = require('winston');
 const Business = require('../../models/business');
 
 async function create(req, res) {
