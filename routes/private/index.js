@@ -12,21 +12,18 @@ router.delete('/users/:userId', Users.deleteOne);
 router.get('/users/:userId', Users.getOne);
 router.put('/users/:userId', Users.updateOne);
 
-// -- Colour library
-// router.put('/users/:userId/colour-library/:colourLibraryId/colours/:colourId', colourLibrary.addColour)
-// router.delete('/users/:userId/colour-library/:colourLibraryId/colours/:colourId', colourLibrary.addColour)
-// -- Colours
-// router.post('/users/:userId/colours', colours.createColour);
-// router.put('/users/:userId/palettes/:paletteId/colours', colours.addToPalette);
-// router.delete('/users/:userId/palettes/:paletteId/colours/:colourId', colours.removeFromPalette);
-// -- Palettes
-// router.post('/users/:userId/palettes', palettes.createPalete);
-// router.get('/users/:userId/palettes', palettes.getUserPalettes);
-// router.get('/users/:userId/palettes/:paletteId', palettes.getUserPalete);
-// router.delete('/users/:userId/paletes/:paletteId', palettes.deleteUserPaltete);
-// router.put('/users/:userId/palettes/:paletteId', palettes.updatePalette);
+// Colour library
+router.put('/colour-library/:colourLibraryId/colours/:colourId', colourLibrary.addColour)
+router.delete('/colour-library/:colourLibraryId/colours/:colourId', colourLibrary.deleteColour)
 
-// Users - end
+// Palettes
+router.post('/palettes', palettes.createPalete);
+router.get('/palettes', palettes.getUserPalettes);
+router.get('/palettes/:paletteId', palettes.getUserPalete);
+router.delete('/paletes/:paletteId', palettes.deleteUserPaltete);
+router.put('/palettes/:paletteId', palettes.updatePalette);
+router.put('/palettes/:paletteId/colours', colours.addToPalette);
+router.delete('/palettes/:paletteId/colours/:colourId', colours.removeFromPalette);
 
 // Business
 router.all('/businesses/*', CheckToken);
@@ -36,6 +33,7 @@ router.get('/businesses/:businessId', Businesses.getOne);
 router.put('/businesses/:businessId', Businesses.updateOne);
 
 // Colours
+router.post('/colours', colours.createColour);
 router.get('/colours', Colours.getAll);
 router.get('/colours/:id', Colours.getOne);
 

@@ -2,6 +2,11 @@ const ColourLibrary = require('../../models/colours/colour-library');
 const winston = require('winston');
 
 async function create(req, res) {
+  if(!req.user) {
+    winston.log('debug', 'User ID not present')
+    return res.status(500).send({message: 'A system error has occured, please contact support', code: 'PROD_NO_USER'})
+  }
+
   try {
     const colourLibrary = await new ColourLibrary({
       createdBy: req.user._id,
@@ -18,6 +23,11 @@ async function create(req, res) {
 }
 
 async function deleteOne(req, res) {
+  if(!req.user) {
+    winston.log('debug', 'User ID not present')
+    return res.status(500).send({message: 'A system error has occured, please contact support', code: 'PROD_NO_USER'})
+  }
+
   try {
     const colourLibrary = req.colourLibrary;
     if (colourLibrary.createdBy != req.user._id) {
@@ -35,6 +45,11 @@ async function deleteOne(req, res) {
 }
 
 async function getOne(req, res) {
+  if(!req.user) {
+    winston.log('debug', 'User ID not present')
+    return res.status(500).send({message: 'A system error has occured, please contact support', code: 'PROD_NO_USER'})
+  }
+
   try {
     const colourLibrary = req.colourLibrary;
     if (colourLibrary) {
@@ -50,6 +65,11 @@ async function getOne(req, res) {
 }
 
 async function getByUserId(req, res) {
+  if(!req.user) {
+    winston.log('debug', 'User ID not present')
+    return res.status(500).send({message: 'A system error has occured, please contact support', code: 'PROD_NO_USER'})
+  }
+
   try {
     const colourLibraries = await ColourLibrary.find({createdBy: req.user._id});
     if (colourLibrary.length >= 1) {
