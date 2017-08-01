@@ -1,6 +1,36 @@
 const ColourLibrary = require('../../models/colours/colour-library');
 const winston = require('winston');
 
+async function addColour(req, res) {
+  if(!req.user || req.colour || req.colourLibrary) {
+    winston.log('debug', 'Parameter not present')
+    return res.status(500).send({message: 'A system error has occured, please contact support', code: 'PROD_NO_USER'})
+  }
+
+  req.colourLibrary.colours.push(req.colour)
+  req.colourLibrary.markModified('colours')
+  req.colourLibrary.save();
+  res.json(colourLibrary);
+}
+
+async function removeColour(req, res) {
+  if(!req.user || req.colour || req.colourLibrary) {
+    winston.log('debug', 'Parameter not present')
+    return res.status(500).send({message: 'A system error has occured, please contact support', code: 'PROD_NO_USER'})
+  }
+
+  const colourInLibrary = req.colourLibrary.colours.indexOf(req.colour)
+  if(!colourInLibrary || colourInLibrary === -1) {
+    winston.log('debug', 'Colour not in library')
+    return res.status(500).send({message: 'A system error has occured, please contact support', code: 'PROD_NO_COLOUR_IN_LIB'})
+  }
+
+  req.colourLibrary.colours.slice(colourInLibrary, 1)
+  req.colourLibrary.markModified('colours')
+  req.colourLibrary.save();
+  res.json(colourLibrary);
+}
+
 async function create(req, res) {
   if(!req.user) {
     winston.log('debug', 'User ID not present')
@@ -68,4 +98,6 @@ module.exports = {
   create,
   deleteOne,
   getOne,
+  addColour,
+  removeColour
 }
