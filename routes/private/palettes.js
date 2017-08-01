@@ -98,6 +98,47 @@ async function updateOne(req, res) {
 
 };
 
+async function addColour(req, res) {
+  if(!req.user || req.colour || req.palette) {
+    winston.log('debug', 'Parameter not present')
+    return res.status(500).send({message: 'A system error has occured, please contact support', code: 'PROD_NO_COLOUR_IN_PAL'})
+  }
+
+  const paletteColourObject = {
+    colour: req.colour,
+    description: req.body.colourDescription,
+  }
+
+  req.palette.colours.push(paletteColourObject)
+  req.palette.markModified('colours')
+  req.palette.save();
+  res.json(palette);
+}
+
+async function removeColour(req, res) {
+  if(!req.user || req.colour || req.palette) {
+    winston.log('debug', 'Parameter not present')
+    return res.status(500).send({message: 'A system error has occured, please contact support', code: 'PROD_NO_USER'})
+  }
+
+  const colourInPalette = req.colourLibrary.colours.indexOf(req.body.paletteColourObject)
+  if(!colourInPalette || colourInPalette === -1) {
+    winston.log('debug', 'Colour not in palette')
+    return res.status(500).send({message: 'A system error has occured, please contact support', code: 'PROD_NO_COLOUR_IN_PAL'})
+  }
+
+  req.palette.colours.splice(colourInPalette, 1)
+  req.palette.markModified('colours')
+  req.palette.save();
+  res.json(palette);
+}
+
 module.exports = {
-  getByUserId
+  create,
+  deleteOne,
+  getOne,
+  getByUserId,
+  updateOne,
+  addColour,
+  removeColour
 }

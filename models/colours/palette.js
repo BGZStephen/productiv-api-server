@@ -5,7 +5,8 @@ const ColourSchema = require('mongoose').model('Colour').schema
 const PaletteSchema = mongoose.Schema({
   createdOn: Date,
   createdBy: String,
-  hex: String,
+  name: String,
+  description: String,
   colors: [{
     description: String,
     color: ColourSchema

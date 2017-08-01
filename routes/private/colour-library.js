@@ -25,7 +25,7 @@ async function removeColour(req, res) {
     return res.status(500).send({message: 'A system error has occured, please contact support', code: 'PROD_NO_COLOUR_IN_LIB'})
   }
 
-  req.colourLibrary.colours.slice(colourInLibrary, 1)
+  req.colourLibrary.colours.splice(colourInLibrary, 1)
   req.colourLibrary.markModified('colours')
   req.colourLibrary.save();
   res.json(colourLibrary);
